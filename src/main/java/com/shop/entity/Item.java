@@ -1,17 +1,16 @@
 package com.shop.entity;
 
 import com.shop.constant.ItemSellStatus;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @ToString
 @Getter
-@Setter // Entity에 setter 사용은 지양, 추후 빼야함
+//@Setter // Entity에 setter 사용은 지양, 추후 빼야함
 @Table(name = "item")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Item {
 
@@ -40,4 +39,16 @@ public class Item {
 
     private LocalDateTime updateDate; // 상품 수정일
 
+    @Builder
+    public Item(Long id, String itemName, int price, int stockNumber, String itemDetail,
+                ItemSellStatus itemSellStatus, LocalDateTime regDate, LocalDateTime updateDate) {
+        this.id = id;
+        this.itemName = itemName;
+        this.price = price;
+        this.stockNumber = stockNumber;
+        this.itemDetail = itemDetail;
+        this.itemSellStatus = itemSellStatus;
+        this.regDate = regDate;
+        this.updateDate = updateDate;
+    }
 }
