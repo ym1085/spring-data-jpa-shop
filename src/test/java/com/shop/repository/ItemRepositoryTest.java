@@ -1,15 +1,25 @@
 package com.shop.repository;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shop.constant.ItemSellStatus;
 import com.shop.entity.Item;
+import com.shop.entity.QItem;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,6 +32,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ItemRepositoryTest {
 
     private static final int CREATE_ITEM_LOOP_COUNT = 10;
+
+    // @persistenceContext annotation is an annotation used to inject the Entity Manager into the bean from the spring boot
+    // Spring Boot use singleton bean architecture, so all thread share spring bean object..
+    // Look up on the issue of concurrency
+    // https://batory.tistory.com/497
+    @PersistenceContext
+    EntityManager em;
 
     @Autowired
     ItemRepository itemRepository;
@@ -73,7 +90,7 @@ class ItemRepositoryTest {
     }
 
     private void createSampleItemList() {
-        for (int i = 0; i < CREATE_ITEM_LOOP_COUNT; i++) {
+        for (int i = 1; i < CREATE_ITEM_LOOP_COUNT + 1; i++) {
             Item item = Item.builder()
                     .itemName("테스트 상품" + i)
                     .price(10000 + i)
@@ -172,5 +189,91 @@ class ItemRepositoryTest {
         //then
         assertThat(result).isNotNull();
         assertThat(result.size()).isEqualTo(10);
+    }
+
+    @Test
+    @DisplayName("QueryDSL 조회 기능 테스트")
+//    @Rollback(value = false)
+    void queryDslTest() throws Exception {
+        //given
+        this.createSampleItemList();
+        JPAQueryFactory queryFactory = new JPAQueryFactory(this.em); // entityManager to JPAQueryFactory
+        QItem qItem = QItem.item;
+
+        //when
+        JPAQuery<Item> query = queryFactory.selectFrom(qItem)
+                .where(qItem.itemSellStatus.eq(ItemSellStatus.SELL))
+                .where(qItem.itemDetail.like("%" + "테스트 상품 상세설명" + "%"))
+                .orderBy(qItem.price.desc());
+
+        List<Item> result = query.fetch();
+//        System.out.println("result => " + result.toString());
+//        System.out.println("result.get(result.size() - 1).getItemDetail() => " + result.get(result.size() - 1).getItemDetail());
+
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result.size()).isEqualTo(10);
+        assertThat(result.get(0).getItemDetail()).isEqualTo("테스트 상품 상세설명10"); // 가격 기준 내림차순이기 때문에 10번이 나와야함
+    }
+
+    private void createSampleItemListForQueryDsl() {
+        for (int i = 1; i <= 5; i++) {
+            Item item = Item.builder()
+                    .itemName("테스트 상품" + i)
+                    .price(10000 + i)
+                    .itemDetail("테스트 상품 상세설명" + i)
+                    .itemSellStatus(ItemSellStatus.SELL)
+                    .stockNumber(100)
+                    .regDate(LocalDateTime.now())
+                    .updateDate(LocalDateTime.now())
+                    .build();
+
+            itemRepository.save(item);
+        }
+
+        for (int i = 6; i <= 10; i++) {
+            Item item = Item.builder()
+                    .itemName("테스트 상품" + i)
+                    .price(10000 + i)
+                    .itemDetail("테스트 상품 상세설명" + i)
+                    .itemSellStatus(ItemSellStatus.SOLD_OUT)
+                    .stockNumber(0)
+                    .regDate(LocalDateTime.now())
+                    .updateDate(LocalDateTime.now())
+                    .build();
+
+            itemRepository.save(item);
+        }
+    }
+
+    @Test
+    @DisplayName("상품 Querydsl 조회 테스트, Predicate 사용")
+    void queryDslTestWithPredicate() throws Exception {
+        //given
+        this.createSampleItemListForQueryDsl();
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        QItem qItem = QItem.item;
+
+        String itemDetail = "테스트 상품 상세설명";
+        int price = 10003; // 10000 ~ 10005까지 dummy 데이터 생성
+        String itemSellStat = "SELL";
+
+        booleanBuilder.and(qItem.itemDetail.like("%" + itemDetail + "%"));
+        booleanBuilder.and(qItem.price.gt(price));
+        if (StringUtils.equals(itemSellStat, ItemSellStatus.SELL)) {
+            booleanBuilder.and(qItem.itemSellStatus.eq(ItemSellStatus.SELL));
+        }
+
+        Pageable pageable = PageRequest.of(0, 5); // page : 0,  size : 5
+
+        //when
+        Page<Item> itemPagingResult = itemRepository.findAll(booleanBuilder, pageable);
+        System.out.println("itemPagingResult: " + itemPagingResult);
+        System.out.println("itemPagingResult.getTotalElements() => " + itemPagingResult.getTotalElements()); // conting
+        System.out.println("itemPagingResult.getContent() => " + itemPagingResult.getContent()); // contents
+
+        //then
+        assertThat(itemPagingResult).isNotNull();
+        assertThat(itemPagingResult.getTotalElements()).isEqualTo(2);
     }
 }

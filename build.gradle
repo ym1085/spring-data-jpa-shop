@@ -1,7 +1,15 @@
+// For querydsl : https://devfunny.tistory.com/844
+buildscript {
+	ext {
+		querydslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.10'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.shop'
@@ -31,6 +39,10 @@ dependencies {
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
 
+	// Querydsl 라이브러리
+	implementation "com.querydsl:querydsl-jpa:${querydslVersion}"
+	annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}" // Querydsl 관련 코드 생성 기능 제공
+
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
@@ -40,4 +52,26 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+//querydsl 추가 시작 (위에 plugin 추가 부분과 맞물림)
+def querydslDir = "$buildDir/generated/querydsl"
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	// IDE의 소스 폴더에 자동으로 넣어준다.
+	main.java.srcDir querydslDir
+}
+
+configurations {
+	// 컴파일이 될때 같이 수행
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+	// Q파일을 생성
+	options.annotationProcessorPath = configurations.querydsl
 }
