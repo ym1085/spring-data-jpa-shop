@@ -61,7 +61,7 @@ class ItemRepositoryTest {
         this.createSampleItemList();
 
         //
-        List<Item> result = itemRepository.findItemByItemName("테스트 상품1");
+        List<Item> result = itemRepository.findByItemName("테스트 상품1");
 //        System.out.println("result => " + result.toString());
 
         //then
@@ -96,7 +96,7 @@ class ItemRepositoryTest {
         this.createSampleItemList();
 
         //when
-        List<Item> result = itemRepository.findItemByItemNameOrItemDetail("테스트 상품1", "테스트 상품 상세 설명5");
+        List<Item> result = itemRepository.findByItemNameOrItemDetail("테스트 상품1", "테스트 상품 상세 설명5");
 //        System.out.println("result => " + result.toString());
 
         //then
@@ -113,7 +113,7 @@ class ItemRepositoryTest {
         this.createSampleItemList();
 
         //when
-        List<Item> result = itemRepository.findItemByPriceLessThan(10005);// 10000, 10001, 10002, 10003, 10004
+        List<Item> result = itemRepository.findByPriceLessThan(10005);// 10000, 10001, 10002, 10003, 10004
         System.out.println("result.get(result.size() - 1).getPrice() => " + result.get(result.size() - 1).getPrice());
 
         //then
@@ -130,7 +130,7 @@ class ItemRepositoryTest {
         this.createSampleItemList();
 
         //when
-        List<Item> result = itemRepository.findItemByPriceLessThanOrderByPriceDesc(10005);
+        List<Item> result = itemRepository.findByPriceLessThanOrderByPriceDesc(10005);
 
         //then
         assertThat(result.size()).isGreaterThan(0);
@@ -141,5 +141,36 @@ class ItemRepositoryTest {
         assertThat(result.get(2).getPrice()).isEqualTo(10002);
         assertThat(result.get(3).getPrice()).isEqualTo(10001);
         assertThat(result.get(4).getPrice()).isEqualTo(10000);
+    }
+
+    @Test
+    @DisplayName("@Query를 이용한 상세 상품 조회 테스트")
+    @Order(6)
+    void findByItemDetailTest() throws Exception {
+        //given
+        this.createSampleItemList();
+
+        //when
+        List<Item> result = itemRepository.findByItemDetail("테스트 상품 상세설명");
+        System.out.println("result => " + result.toString());
+
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result.size()).isEqualTo(10);
+    }
+
+    @Test
+    @DisplayName("@Query와 native query 옵션을 사용하여 상세 상품 조회 테스트")
+    @Order(7)
+    void findByItemDetailNativeTest() throws Exception {
+        //given
+        this.createSampleItemList();
+
+        //when
+        List<Item> result = itemRepository.findByItemDetailNative("테스트 상품 상세설명");
+
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result.size()).isEqualTo(10);
     }
 }
