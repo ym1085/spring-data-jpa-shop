@@ -43,6 +43,9 @@ dependencies {
 	implementation "com.querydsl:querydsl-jpa:${querydslVersion}"
 	annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}" // Querydsl 관련 코드 생성 기능 제공
 
+	// Automatice Restart(Reload application classpath file updated), Live Reload(css, js, html)
+	implementation 'org.springframework.boot:spring-boot-devtools'
+
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
