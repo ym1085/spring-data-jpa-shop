@@ -1,6 +1,6 @@
-package com.shop.entity;
+package com.shop.domain.item.entity;
 
-import com.shop.constant.ItemSellStatus;
+import com.shop.domain.item.constant.ItemSellStatus;
 import lombok.*;
 
 import javax.persistence.*;

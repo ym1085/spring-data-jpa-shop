@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>타임리프 단일 데이터 출력 예제(th:text)</title>
+</head>
+<body>
+    <!-- 타임리프 서버 사이드 랜더링 후 간단한 화면 출력 테스트 -->
+    <h1>상품 데이터 출력 예제</h1>
+    <div>
+        상품명 : <span th:text="${itemTestRequestDto.itemName}"></span>
+    </div>
+    <div>
+        상품상세설명 : <span th:text="${itemTestRequestDto.itemDetail}"></span>
+    </div>
+    <div>
+        상품 등록일 : <span th:text="${itemTestRequestDto.regDate}"></span>
+    </div>
+    <div>
+        가격 : <span th:text="${itemTestRequestDto.price}"></span>
+    </div>
+</body>
+</html>

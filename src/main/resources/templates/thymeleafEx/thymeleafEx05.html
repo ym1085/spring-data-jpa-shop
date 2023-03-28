@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>타임리프 리스트 출력 화면(th:if // th:unless)</title>
+</head>
+<body>
+    <h1>상품 리스트 출력 예제</h1>
+    <div>
+        <!-- Internal URL -->
+        <a th:href="@{/item/main}">예제 1 페이지 이동</a>
+    </div>
+    <div>
+        <!-- External URL -->
+        <a th:href="@{https://www.thymeleaf.org/}">타임리프 공식 페이지 이동</a>
+    </div>
+    <div>
+        <a th:href="@{/item/param(param1 = '파라미터 데이터1', param2 = '파라미터 데이터2')}">타임리프 파라미터 전달</a>
+    </div>
+</body>
+</html>

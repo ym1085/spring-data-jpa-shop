@@ -1,4 +1,4 @@
-package com.shop.constant;
+package com.shop.domain.item.constant;
 
 /*
  * 상품 상태 확인용
