@@ -1,11 +1,11 @@
-package com.shop.repository;
+package com.shop.domain.item.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.shop.constant.ItemSellStatus;
-import com.shop.entity.Item;
-import com.shop.entity.QItem;
+import com.shop.domain.item.constant.ItemSellStatus;
+import com.shop.domain.item.entity.Item;
+import com.shop.domain.item.entity.QItem;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;

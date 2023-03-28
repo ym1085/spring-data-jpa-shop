@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>타임리프 리스트 출력 화면(th:each)</title>
+</head>
+<body>
+    <h1>상품 리스트 출력 예제</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <td>순번</td>
+                <td>상품명</td>
+                <td>상품설명</td>
+                <td>가격</td>
+                <td>상품등록일</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="itemTestRequestDto, status: ${itemTestRequestDtoList}">
+                <td th:text="${status.index}"></td>
+                <td th:text="${itemTestRequestDto.itemName}"></td>
+                <td th:text="${itemTestRequestDto.itemDetail}"></td>
+                <td th:text="${itemTestRequestDto.price}"></td>
+                <td th:text="${itemTestRequestDto.regDate}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
