@@ -46,6 +46,9 @@ dependencies {
 	// Automatice Restart(Reload application classpath file updated), Live Reload(css, js, html)
 	implementation 'org.springframework.boot:spring-boot-devtools'
 
+	// Thymeleaf Layout library
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
