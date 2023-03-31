@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--
+     fragment(include)
+     - th:fragment="별칭" : Fragment를 사용하여 HTML 조각을 만들어둔다.
+     - th:fragment="별칭" : 그냥 include용 파일을 하나 만든다고 생각하는게 편한 듯.
+ -->
 
-<div th:fragment="header">
+<!-- header -->
+<div class="header" th:fragment="header">
     <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03"
@@ -26,10 +32,10 @@
                     <a class="nav-link" href="/orders">구매이력</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAnonymous()">
-                    <a class="nav-link" href="/members/login">로그인</a>
+                    <a class="nav-link" href="/member/login">로그인</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/members/logout">로그아웃</a>
+                    <a class="nav-link" href="/member/logout">로그아웃</a>
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0" th:action="@{/}" method="get">
@@ -39,5 +45,4 @@
         </div>
     </nav>
 </div>
-
 </html>
