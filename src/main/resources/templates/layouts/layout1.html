@@ -13,18 +13,29 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+    <!--
+        참고 자료
+        - [Namespace ~ is not bound](https://velog.io/@heeyeon3050/Spring-Namespace-is-not-bound)
+        - [thymeleaf template layout 사용하기](https://bamdule.tistory.com/33)
+
+        1. Layout은 Fragment 들이 조합된 HTML을 의미
+        2. th:replace="fragment경로 :: fragment이름" 속성은 해당 영역을 fragemnt로 치환하겠다는 의미
+        3. layout:fragment="content"은 해당 layout을 사용하는 content의 내용을 불러오겠다는 의미
+        4. th:block은 타임리프 특성상 HTML 태그 안에 속성으로 기능을 정의하여 사용하는데 태그 안에
+           속성을 적용하기가 까다로운 경우 th:block(div 느낌?)을 사용하여 대체한다. 대표적으로는
+           th:each, th:if 같은걸 사용할 때 사용이 되는 듯?
+    -->
     <th:block layout:fragment="script"></th:block>
     <th:block layout:fragment="css"></th:block>
 </head>
 <body>
-
+    <!-- header -->
     <div th:replace="fragments/header::header"></div>
 
-    <div layout:fragment="content">
+    <!-- contents -->
+    <div layout:fragment="content"></div>
 
-    </div>
-
+    <!-- footer -->
     <div th:replace="fragments/footer::footer"></div>
-
 </body>
 </html>

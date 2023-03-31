@@ -49,6 +49,15 @@ dependencies {
 	// Thymeleaf Layout library
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
+	// Spring Starter Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// StringUtils... and Apache
+	implementation 'org.apache.commons:commons-lang3'
+
+	// Validation Request parameters
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
