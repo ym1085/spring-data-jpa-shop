@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,6 +42,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout")) // 로그아웃 URL 설정
                     .logoutSuccessUrl("/"); // 로그아웃 성공 시 이동할 URL 지정
+
+        http.authorizeRequests() // Security 처리에 HttpServletRequest를 이용 한다는것을 의미
+                .mvcMatchers("/", "/member/**", "/item/**", "/images/**").permitAll() // permitAll() 을 통해 모든 사용자가 인증 없이 해당 경로에 접근 가능
+                .mvcMatchers("/admin/**").hasRole("ADMIN") // /admin/** 경로는 Role ADMIN이 필요
+                .anyRequest().authenticated(); // 나머지 경로는 모두 인증을 필요로 하도록 설정
+
+        http.exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint()); // 인증되지 않은 사용자 접근 시 수행되는 핸들러 등록
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**"); // /static 하위 디렉토리는 인증 무시
     }
 
     /**

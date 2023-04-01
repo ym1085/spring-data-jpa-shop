@@ -54,7 +54,8 @@ public class Member {
                 .email(memberFormRequestDto.getEmail())
                 .address(memberFormRequestDto.getAddress())
                 .password(passwordEncoder.encode(memberFormRequestDto.getPassword()))
-                .role(Role.USER)
+//                .role(Role.USER)
+                .role(Role.ADMIN) // ADMIN 테스트
                 .build();
     }
 }
