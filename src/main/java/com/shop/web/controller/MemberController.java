@@ -60,4 +60,23 @@ public class MemberController {
         return "redirect:/";
     }
 
+    /**
+     * 로그인 화면 출력
+     */
+    @GetMapping(value = "/login")
+    public String login() {
+        log.info("MemberController.login method called");
+        return "/member/memberLoginForm";
+    }
+
+    /**
+     * 로그인 에러 화면 출력, 파라미터 같이 전달
+     */
+    @GetMapping(value = "/login/error")
+    public String loginError(Model model) {
+        log.info("MemberController.loginError method called");
+        model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요.");
+        return "/member/memberLoginForm";
+    }
+
 }
