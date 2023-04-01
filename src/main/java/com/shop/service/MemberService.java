@@ -4,6 +4,10 @@ import com.shop.domain.member.entity.Member;
 import com.shop.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +17,33 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor // Create Constructor and DI -> @NonNull or private final variable
 @Service // Service Layer Annotation
-public class MemberService {
+public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+
+    /**
+     * 회원 로그인
+     * Interfaces provided by Spring Security
+     * @param email the email identifying the user whose data is required.
+     * @return
+     * @throws UsernameNotFoundException
+     */
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        log.info("loadUserByUsername, email = {}", email);
+        Member member = memberRepository.findByEmail(email);
+        if (member == null) {
+            throw new UsernameNotFoundException("존재하지 않는 회원입니다, email=" + email);
+        }
+
+        // UserDetail을 구현하고 있는 User 객체를 반환 해준다.
+        // UserDetail은 회원 정보를 담고 있는 인터페이스
+        return User.builder()
+                .username(member.getEmail())
+                .password(member.getPassword())
+                .roles(member.getRole().toString())
+                .build();
+    }
 
     /**
      * 사용자 회원 가입
