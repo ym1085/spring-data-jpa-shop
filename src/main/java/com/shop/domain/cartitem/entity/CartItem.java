@@ -28,7 +28,7 @@ public class CartItem {
     private Long id;
 
     /* 하나의 "장바구니"에는 여러개의 "상품"을 담을 수 있기에 @ManyToOne 어노테이션 사용 */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
@@ -36,7 +36,7 @@ public class CartItem {
         장바구니에 담을 상품의 정보를 알아야 하기에 상품 엔티티 매핑, 하나의 상품은 여러 장바구니의 장바구니 상품으로
         담길 수 있기에 마찬가지로 @ManyToOne 어노테이션 사용
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 

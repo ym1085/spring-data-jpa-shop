@@ -7,6 +7,7 @@ import com.shop.domain.member.entity.Member;
 import com.shop.domain.member.repository.MemberRepository;
 import com.shop.domain.order.repository.OrderRepository;
 import com.shop.domain.orderitem.entity.OrderItem;
+import com.shop.domain.orderitem.repository.OrderItemRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ class OrderTest {
     @Autowired
     MemberRepository memberRepository;
 
+    @Autowired
+    OrderItemRepository orderItemRepository;
+
     @PersistenceContext
     EntityManager em;
 
@@ -55,7 +59,7 @@ class OrderTest {
     public Order createOrder() {
         Order order = new Order(); // 깡통
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             Item item = this.createItem(); // 3개의 Item 생성
             Item savedItem = itemRepository.save(item); // Item 테이블에 저장
 
@@ -114,5 +118,22 @@ class OrderTest {
 
         //when
         //then
+    }
+
+    @Test
+    @DisplayName("지연 로딩 테스트")
+    void lazyLoadingTest() throws Exception {
+        //given
+        Order order = this.createOrder();
+        Long orderItemId = order.getOrderItems().get(0).getId();
+        em.flush();
+        em.clear();
+
+        //when
+        OrderItem orderItem = orderItemRepository.findById(orderItemId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        //then
+        System.out.println("Order class : " + orderItem.getOrder().getClass());
     }
 }

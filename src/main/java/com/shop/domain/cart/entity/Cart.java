@@ -28,7 +28,7 @@ public class Cart {
     @Column(name = "cart_id")
     private Long id;
 
-    @OneToOne // 회원 엔티티와 1:1 매핑
+    @OneToOne(fetch = FetchType.LAZY) // 회원 엔티티와 1:1 매핑
     @JoinColumn(name = "member_id") // 매핑할 외래키 지정, name 속성에 매핑할 외래키의 이름을 설정한다
     private Member member;
 

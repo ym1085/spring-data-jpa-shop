@@ -26,7 +26,7 @@ public class Order {
 
 
     /* 한명의 회원(1)은 여러개의 주문(N)을 할 수 있다 */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
