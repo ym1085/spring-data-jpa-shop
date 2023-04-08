@@ -1,5 +1,6 @@
 package com.shop.domain.order.entity;
 
+import com.shop.domain.BaseEntity;
 import com.shop.domain.member.entity.Member;
 import com.shop.domain.order.constant.OrderStatus;
 import com.shop.domain.orderitem.entity.OrderItem;
@@ -17,7 +18,7 @@ import java.util.List;
 @Setter
 @Table(name = "orders") // 정렬 할 때 order 사용하기에, orders로 지정..
 @Entity // JPA에 의해 관리가 되도록 지정, DB 연결 등등...
-public class Order {
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,6 +39,6 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus; // 주문 상태
 
-    private LocalDateTime regDate;
-    private LocalDateTime updateDate;
+    /*private LocalDateTime regDate;
+    private LocalDateTime updateDate;*/
 }

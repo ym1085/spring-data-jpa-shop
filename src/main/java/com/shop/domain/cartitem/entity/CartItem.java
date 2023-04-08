@@ -1,5 +1,6 @@
 package com.shop.domain.cartitem.entity;
 
+import com.shop.domain.BaseEntity;
 import com.shop.domain.cart.entity.Cart;
 import com.shop.domain.item.entity.Item;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @Setter // 실무에서는 사양 지양
 @Table(name = "cart_item")
 @Entity
-public class CartItem {
+public class CartItem extends BaseEntity {
 
     /**
      * 장바구니에는 고객이 관심 있거나 나중에 사려는 "상품"을 담아 둘 것이다.

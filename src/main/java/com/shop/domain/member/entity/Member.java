@@ -1,5 +1,6 @@
 package com.shop.domain.member.entity;
 
+import com.shop.domain.BaseEntity;
 import com.shop.domain.member.constant.Role;
 import com.shop.web.controller.dto.MemberFormRequestDto;
 import lombok.*;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @Entity
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

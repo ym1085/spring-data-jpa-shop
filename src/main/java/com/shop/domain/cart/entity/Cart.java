@@ -1,5 +1,6 @@
 package com.shop.domain.cart.entity;
 
+import com.shop.domain.BaseEntity;
 import com.shop.domain.member.entity.Member;
 import lombok.*;
 
@@ -21,7 +22,7 @@ import javax.persistence.*;
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "cart")
 @Entity
-public class Cart {
+public class Cart extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

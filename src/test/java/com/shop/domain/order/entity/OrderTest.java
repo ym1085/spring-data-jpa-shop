@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,8 +49,6 @@ class OrderTest {
                 .itemDetail("상세설명")
                 .itemSellStatus(ItemSellStatus.SELL)
                 .stockNumber(100)
-                .regDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
                 .build();
     }
 

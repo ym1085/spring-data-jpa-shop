@@ -1,5 +1,6 @@
 package com.shop.domain.orderitem.entity;
 
+import com.shop.domain.BaseEntity;
 import com.shop.domain.item.entity.Item;
 import com.shop.domain.order.entity.Order;
 import lombok.Getter;
@@ -7,14 +8,13 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @ToString
 @Getter
 @Setter
 @Table(name = "order_item")
 @Entity
-public class OrderItem {
+public class OrderItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,6 +32,7 @@ public class OrderItem {
 
     private int orderPrice;
     private int count;
-    private LocalDateTime regDate;
-    private LocalDateTime updateDate;
+
+    /*private LocalDateTime regDate;
+    private LocalDateTime updateDate;*/
 }

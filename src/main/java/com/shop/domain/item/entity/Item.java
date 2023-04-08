@@ -1,10 +1,10 @@
 package com.shop.domain.item.entity;
 
+import com.shop.domain.BaseEntity;
 import com.shop.domain.item.constant.ItemSellStatus;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @ToString
 @Getter
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "item")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Item {
+public class Item extends BaseEntity {
 
     @Id
     @Column(name = "item_id")
@@ -35,20 +35,18 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; // 상품 판매 상태
 
-    private LocalDateTime regDate; // 상품 등록일
+    /*private LocalDateTime regDate; // 상품 등록일
 
-    private LocalDateTime updateDate; // 상품 수정일
+    private LocalDateTime updateDate; // 상품 수정일*/
 
     @Builder
     public Item(Long id, String itemName, int price, int stockNumber, String itemDetail,
-                ItemSellStatus itemSellStatus, LocalDateTime regDate, LocalDateTime updateDate) {
+                ItemSellStatus itemSellStatus) {
         this.id = id;
         this.itemName = itemName;
         this.price = price;
         this.stockNumber = stockNumber;
         this.itemDetail = itemDetail;
         this.itemSellStatus = itemSellStatus;
-        this.regDate = regDate;
-        this.updateDate = updateDate;
     }
 }
