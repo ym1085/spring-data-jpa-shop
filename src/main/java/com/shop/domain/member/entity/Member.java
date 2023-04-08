@@ -10,7 +10,8 @@ import javax.persistence.*;
 @ToString
 @Getter
 @Table(name = "member")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Entity
 public class Member {
 

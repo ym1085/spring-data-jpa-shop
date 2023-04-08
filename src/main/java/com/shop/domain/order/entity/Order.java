@@ -24,13 +24,14 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
+
     /* 한명의 회원(1)은 여러개의 주문(N)을 할 수 있다 */
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItemList = new ArrayList<>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     private LocalDateTime orderDate; // 주문 날짜
 
