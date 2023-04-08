@@ -20,7 +20,6 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,8 +53,6 @@ class ItemRepositoryTest {
                 .itemDetail("테스트 상품 상세설명")
                 .itemSellStatus(ItemSellStatus.SELL)
                 .stockNumber(100)
-                .regDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
                 .build();
 
         //when
@@ -97,8 +94,6 @@ class ItemRepositoryTest {
                     .itemDetail("테스트 상품 상세설명" + i)
                     .itemSellStatus(ItemSellStatus.SELL)
                     .stockNumber(100)
-                    .regDate(LocalDateTime.now())
-                    .updateDate(LocalDateTime.now())
                     .build();
 
             itemRepository.save(item);
@@ -224,8 +219,6 @@ class ItemRepositoryTest {
                     .itemDetail("테스트 상품 상세설명" + i)
                     .itemSellStatus(ItemSellStatus.SELL)
                     .stockNumber(100)
-                    .regDate(LocalDateTime.now())
-                    .updateDate(LocalDateTime.now())
                     .build();
 
             itemRepository.save(item);
@@ -238,8 +231,6 @@ class ItemRepositoryTest {
                     .itemDetail("테스트 상품 상세설명" + i)
                     .itemSellStatus(ItemSellStatus.SOLD_OUT)
                     .stockNumber(0)
-                    .regDate(LocalDateTime.now())
-                    .updateDate(LocalDateTime.now())
                     .build();
 
             itemRepository.save(item);
