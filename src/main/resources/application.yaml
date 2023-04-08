@@ -13,7 +13,7 @@ spring:
         show_sql: true    # 실행되는 쿼리 콘솔 출력
         format_sql: true  # 콘솔창 쿼리 가독성 좋게 포맷팅
     hibernate:
-      ddl-auto: create # none, crate, create-drop, update, validate
+      ddl-auto: update # none, crate, create-drop, update, validate
     database-platform: org.hibernate.dialect.MySQL8Dialect
   devtools:
     livereload:
