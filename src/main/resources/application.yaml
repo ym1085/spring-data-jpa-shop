@@ -13,13 +13,23 @@ spring:
         show_sql: true    # 실행되는 쿼리 콘솔 출력
         format_sql: true  # 콘솔창 쿼리 가독성 좋게 포맷팅
     hibernate:
-      ddl-auto: update # none, crate, create-drop, update, validate
+      ddl-auto: validate # none, crate, create-drop, update, validate
     database-platform: org.hibernate.dialect.MySQL8Dialect
   devtools:
     livereload:
       enabled: true # live reload true
   thymeleaf:
     cache: false # 개발 환경에서만 thymeleaf 캐싱 기능을 off로 설정
+  servlet:
+    multipart:
+      max-file-size: 20MB # 파일 하나의 최대 크기(20M)
+      max-request-size: 100MB # 한 번에 최대ㅔ 업로드 가능 용량(100MB)
+      #enabled: true # 파일 업로드 가능 여부를 선택(true)
+      #location: /Users/YoungminKim # 업로드 된 파일의 임시 저장 경로(/Users/YoungminKim)
+
+# https://okky.kr/questions/641207 -> File upload on linux server
+itemImgLocation: C:/shop/item # 상품 이미지 업로드 경로
+uploadPath: file:///C:/shop/ # 외부 리소스 업로드 경로 -> https://toshi15shkim.github.io/articles/2019-09/spring-resources-location
 
 logging:
   level:

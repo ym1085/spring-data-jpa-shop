@@ -4,15 +4,18 @@ import com.shop.domain.item.constant.ItemSellStatus;
 import com.shop.domain.item.entity.Item;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 상품 등록은 어차피 관리자가 수행하는 행위
  */
+@ToString
 @Getter
 @Setter
 public class ItemFormRequestDto {
@@ -22,13 +25,13 @@ public class ItemFormRequestDto {
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
     private String itemName;
 
-    @NotBlank(message = "가격은 필수 입력 값입니다.")
+    @NotNull(message = "가격은 필수 입력 값입니다.")
     private Integer price;
 
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
     private String itemDetail;
 
-    @NotBlank(message = "재고는 필수 입력 값입니다.")
+    @NotNull(message = "재고는 필수 입력 값입니다.")
     private Integer stockNumber;
 
     private ItemSellStatus itemSellStatus;
