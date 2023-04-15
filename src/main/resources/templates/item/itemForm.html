@@ -8,9 +8,9 @@
     <script th:inline="javascript">
         /* form load */
         $(function(){
-            console.log(`Enter Item Register Page`);
             const errorMsg = [[${errorMessage}]];
-            if (errorMsg != null) {
+            console.log(`errorMsg => ${errorMsg}`);
+            if (errorMsg !== null && errorMsg !== '') {
                 alert(`errorMessage => ${errorMsg}`);
             }
             bindDomEvent();
@@ -107,7 +107,7 @@
 
         <!-- 상품 등록 : 초기 데이터가 없는 경우 -->
         <div th:if="${#lists.isEmpty(itemFormRequestDto.itemImgRequestDtoList)}">
-            <div class="form-group" th:each="num: ${#numbers.sequence(1,5)}">
+            <div class="form-group" th:each="num: ${#numbers.sequence(1, 5)}">
                 <div class="custom-file img-div">
                     <input type="file" class="custom-file-input" name="itemImgFile">
                     <label class="custom-file-label" th:text="상품이미지 + ${num}"></label>
@@ -120,9 +120,11 @@
             <div class="form-group" th:each="itemImgRequestDto, status: ${itemFormRequestDto.itemImgRequestDtoList}">
                 <div class="custom-file img-div">
                     <input type="file" class="custom-file-input" name="itemImgFile">
-                    <input type="hidden" name="itemImgIds" th:value="${itemImgRequestDto.id}">
-                    <label class="custom-file-label" th:text="${not #strings.isEmpty(itemImgRequestDto.oriImgName)}
-                        ? ${itemImgRequestDto.oriImgName} : '상품이미지' + ${status.index+1}"></label>
+                    <!--<input type="hidden" name="itemImgIds" th:value="${itemImgRequestDto.id}">-->
+                    <!-- th:each를 통해 Loop를 돌리고, item_img 테이블의 item_img_id를 아래 셋팅 해준다 -->
+                    <input type="text" name="itemImgIds" th:value="${itemImgRequestDto.id}">
+                    <label class="custom-file-label" th:text="${not #strings.isEmpty(itemImgRequestDto.imgName)}
+                        ? ${itemImgRequestDto.imgName} : '상품이미지' + ${status.index+1}"></label>
                 </div>
             </div>
         </div>

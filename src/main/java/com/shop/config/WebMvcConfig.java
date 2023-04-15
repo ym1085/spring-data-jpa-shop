@@ -27,5 +27,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/images/**")
                 .addResourceLocations(uploadPath); // Window : file:///C:/shop/, Linux : file:/DATA/video/ 지정
+
+        /*registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/templates/", "classpath:/static/");*/
     }
 }
