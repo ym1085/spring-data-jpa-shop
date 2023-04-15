@@ -5,12 +5,15 @@ import com.shop.domain.item.repository.ItemRepository;
 import com.shop.domain.itemimg.entity.ItemImg;
 import com.shop.domain.itemimg.repository.ItemImgRepository;
 import com.shop.web.controller.dto.ItemFormRequestDto;
+import com.shop.web.controller.dto.ItemImgRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 // Transcation 종료 시점에 영속성 컨텍스트의 데이터를 DB에 밀어 넣는다
@@ -50,5 +53,28 @@ public class ItemService {
         }
 
         return item.getId();
+    }
+
+    /**
+     * 상품 id 기반 상품 및 상품 이미지 조회
+     */
+    @Transactional(readOnly = true) // 변경감지(dirty checking)을 수행하지 않아, 성능상 이점이 있음
+    public ItemFormRequestDto getItemAndItemImgByItemId(Long itemId) {
+        // 상품 테이블(1) : 상품 이미지 테이블(N)
+        List<ItemImg> findItemImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId); // 아이템 이미지 데이터 조회
+        List<ItemImgRequestDto> itemImgRequestDtoList = new ArrayList<>();
+        for (ItemImg findItemImg : findItemImgList) {
+            itemImgRequestDtoList.add(ItemImgRequestDto.of(findItemImg));  // Entity: ItemImg  -> DTO: ItemImgRequestDto
+        }
+
+        Item findItem = itemRepository.findById(itemId)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
+
+        ItemFormRequestDto itemFormRequestDto = ItemFormRequestDto.of(findItem);
+        itemFormRequestDto.setItemImgRequestDtoList(itemImgRequestDtoList);
+
+        log.info("itemFormRequestDto = {}", itemFormRequestDto);
+        log.info("itemImgRequestDtoList = {}", itemImgRequestDtoList);
+        return itemFormRequestDto;
     }
 }

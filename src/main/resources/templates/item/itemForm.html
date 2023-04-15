@@ -10,7 +10,8 @@
         $(function(){
             console.log(`Enter Item Register Page`);
             const errorMsg = [[${errorMessage}]];
-            if (errorMsg != null) {
+            console.log(`errorMsg => ${errorMsg}`);
+            if (errorMsg !== null && errorMsg !== '') {
                 alert(`errorMessage => ${errorMsg}`);
             }
             bindDomEvent();
