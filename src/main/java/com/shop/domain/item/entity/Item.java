@@ -2,6 +2,7 @@ package com.shop.domain.item.entity;
 
 import com.shop.domain.BaseEntity;
 import com.shop.domain.item.constant.ItemSellStatus;
+import com.shop.web.controller.dto.ItemFormRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -53,5 +54,14 @@ public class Item extends BaseEntity {
         this.stockNumber = stockNumber;
         this.itemDetail = itemDetail;
         this.itemSellStatus = itemSellStatus;
+    }
+
+    /* 상품 상세 화면 -> 상품 업데이트(Dirty Checking // 변경 감지)용 */
+    public void updateItem(ItemFormRequestDto itemFormRequestDto) {
+        this.itemName = itemFormRequestDto.getItemName();
+        this.price = itemFormRequestDto.getPrice();
+        this.stockNumber = itemFormRequestDto.getStockNumber();
+        this.itemDetail = itemFormRequestDto.getItemDetail();
+        this.itemSellStatus = itemFormRequestDto.getItemSellStatus(); // enum
     }
 }

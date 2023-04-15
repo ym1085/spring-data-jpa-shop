@@ -36,7 +36,7 @@ public class ItemController {
      */
     @PostMapping(value = "/admin/item/new")
     public String itemForm(
-            @Valid @ModelAttribute ItemFormRequestDto itemFormRequestDto,
+            @Valid ItemFormRequestDto itemFormRequestDto,
             BindingResult bindingResult,
             Model model,
             @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
@@ -89,5 +89,35 @@ public class ItemController {
         model.addAttribute("errorMessage", errorMessage);
         model.addAttribute("itemFormRequestDto", itemFormRequestDto);
         return "item/itemForm";
+    }
+
+    /**
+     * 상품 id 기반 상품 및 상품 이미지 수정
+     * @param itemFormRequestDto : 상품 데이터(상품명, 가격, 상품 상세, 재고)
+     * @param itemImgFileList : 상품 이미지
+     */
+    @PostMapping(value = "/admin/item/{itemId}")
+    public String updateItem(@Valid ItemFormRequestDto itemFormRequestDto,
+                             BindingResult bindingResult,
+                             @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
+                             Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "/item/itemForm";
+        }
+        
+        if (itemImgFileList.get(0).isEmpty() && itemFormRequestDto.getId() == null) {
+            model.addAttribute("errorMessage", "첫번째 상품 이미지는 필수 값 입니다.");
+            return "/item/itemForm";
+        }
+
+        try {
+            itemService.updateItem(itemFormRequestDto, itemImgFileList);
+        } catch (Exception e) {
+            log.error("Updating a product failed, e = {}", e.getMessage());
+            model.addAttribute("errorMessage", "상품 수정 중 에러가 발생하였습니다.");
+            return "item/itemForm";
+        }
+        return "redirect:/";
     }
 }

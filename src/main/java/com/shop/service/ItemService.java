@@ -39,9 +39,9 @@ public class ItemService {
      */
     public Long saveItem(ItemFormRequestDto itemFormRequestDto, List<MultipartFile> files) throws Exception {
         Item item = itemFormRequestDto.createItem(); // Dto to Entity(Item) 변환 후 상품 등록 진행
-        itemRepository.save(item);
+        itemRepository.save(item); //  상품 저장
 
-        for (int i = 0; i < files.size(); i++) { // 이미지 등록
+        for (int i = 0; i < files.size(); i++) { // 상품 이미지 저장
             ItemImg itemImg = new ItemImg();
             itemImg.setItem(item);
             if (i == 0) {
@@ -76,5 +76,28 @@ public class ItemService {
         log.info("itemFormRequestDto = {}", itemFormRequestDto);
         log.info("itemImgRequestDtoList = {}", itemImgRequestDtoList);
         return itemFormRequestDto;
+    }
+
+    /**
+     * 상품 수정
+     * @param itemFormRequestDto : 업데이트 상품 정보(상품명, 재고, 상품가격 등등..)
+     * @param itemImgFileList : 업데이트 상품 이미지 정보
+     * @return 수정된 상품의 id 반환
+     */
+    public Long updateItem(ItemFormRequestDto itemFormRequestDto, List<MultipartFile> itemImgFileList) throws Exception {
+        // 상품 ID를 기반으로 하여 DB의 상품 조회
+        Item item = itemRepository.findById(itemFormRequestDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id=" + itemFormRequestDto.getId()));
+
+        // 변경 감지(Dirty Checking)을 통해 엔티티 업데이트 진행 -> 이 부분에서 상품 업데이트 관련 된 부분은 끝난다
+        item.updateItem(itemFormRequestDto);
+
+        // 상품 이미지 ID(item_img_id) 리스트를 조회
+        List<Long> itemImgIds = itemFormRequestDto.getItemImgIds();
+        for (int i = 0; i < itemImgIds.size(); i++) {
+            // 이미지 등록 호출
+            itemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(i));
+        }
+        return item.getId();
     }
 }

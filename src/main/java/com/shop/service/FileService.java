@@ -23,16 +23,11 @@ public class FileService {
      * @throws Exception
      */
     public String uploadFile(String uploadPath, String originalFileName, byte[] fileData) throws Exception {
-        UUID uuid = UUID.randomUUID(); // 파일명 중복을 피하기 위해서, 랜덤 난수 생성
-
-        // 파일 확장자 추출
-        String fileExt = originalFileName.substring(originalFileName.lastIndexOf(".")); // 확장자 추출
-
-        // 난수 + 확장자를 기반으로 파일명 생성
+        UUID uuid = UUID.randomUUID();
+        String fileExt = originalFileName.substring(originalFileName.lastIndexOf("."));
         String savedFileName = uuid.toString() + fileExt;
 
         String fileUploadFullUrl = uploadPath + "/" + savedFileName;
-        log.info("fileUploadFullUrl = {}", fileUploadFullUrl);
         FileOutputStream fos = new FileOutputStream(fileUploadFullUrl); // 바이트 단위의 출력을 내보내는 클래스, 파일 출력 스트림을 만든다
         fos.write(fileData); // 파일을 파일 출력 스트림에 입력
         fos.close();
