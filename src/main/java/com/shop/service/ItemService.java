@@ -6,8 +6,11 @@ import com.shop.domain.itemimg.entity.ItemImg;
 import com.shop.domain.itemimg.repository.ItemImgRepository;
 import com.shop.web.controller.dto.ItemFormRequestDto;
 import com.shop.web.controller.dto.ItemImgRequestDto;
+import com.shop.web.controller.dto.ItemSearchRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -99,5 +102,10 @@ public class ItemService {
             itemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(i));
         }
         return item.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Item> getAdminItemPage(ItemSearchRequestDto itemSearchRequestDto, Pageable pageable) {
+        return itemRepository.getAdminItemPage(itemSearchRequestDto, pageable);
     }
 }
