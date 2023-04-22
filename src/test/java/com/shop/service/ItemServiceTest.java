@@ -5,7 +5,7 @@ import com.shop.domain.item.entity.Item;
 import com.shop.domain.item.repository.ItemRepository;
 import com.shop.domain.itemimg.entity.ItemImg;
 import com.shop.domain.itemimg.repository.ItemImgRepository;
-import com.shop.web.controller.dto.ItemFormRequestDto;
+import com.shop.web.controller.dto.request.ItemFormRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

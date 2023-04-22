@@ -2,7 +2,7 @@ package com.shop.domain.member.entity;
 
 import com.shop.domain.BaseEntity;
 import com.shop.domain.member.constant.Role;
-import com.shop.web.controller.dto.MemberFormRequestDto;
+import com.shop.web.controller.dto.request.MemberFormRequestDto;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

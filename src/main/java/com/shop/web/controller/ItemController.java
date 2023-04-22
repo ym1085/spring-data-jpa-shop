@@ -2,8 +2,8 @@ package com.shop.web.controller;
 
 import com.shop.domain.item.entity.Item;
 import com.shop.service.ItemService;
-import com.shop.web.controller.dto.ItemFormRequestDto;
-import com.shop.web.controller.dto.ItemSearchRequestDto;
+import com.shop.web.controller.dto.request.ItemFormRequestDto;
+import com.shop.web.controller.dto.request.ItemSearchRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -130,6 +130,14 @@ public class ItemController {
         return "redirect:/";
     }
 
+    /**
+     * 상품 관리 -> 상품 조회 및 검색 시 사용
+     * 조건
+     * - 기간(1d, 1w, 1m, 6m)
+     * - 판매상태(판매중, 품절)
+     * - 상품명, 상품 등록자 Id
+     * - 검색어
+     */
     @GetMapping(value = {"/admin/items", "/admin/items/{page}"}) // 페이지 번호 있는 경우, 없는 경우 URL 처리
     public String itemMange(ItemSearchRequestDto itemSearchRequestDto,
                             @PathVariable("page") Optional<Integer> page,

@@ -43,7 +43,7 @@ public class ItemImgService {
             // 저장한 상품 이미지를 불러올 경로를 설정. 외부 리소스를 불러오는 urlPatterns/로 WebMvcConfig 클래스에서
             // /images/**를 설정해 주었음. 또한 application.yaml에서 설정한 uploadPath 프로퍼티 경로인 "C:/shop/ 아래
             // item 폴더에 이미지를 저장하므로 상품 이미지를 불러오는 경로로 "/images/item/"를 붙힌다
-            imgUrl = "/images/item" + imgName;
+            imgUrl = "/images/item/" + imgName;
         }
         itemImg.updateItemImg(originalFilename, imgName, imgUrl);
         itemImgRepository.save(itemImg);
