@@ -14,9 +14,6 @@
 
 ## Goal
 
-1. Using Spring Data JPA
-2. Design a simple shopping mall web
-
-## References
-
-1. [Personal summary](https://dev-ymkim.oopy.io/shop)
+1. Spring Data JPA의 기본적인 메커니즘을 이해 목적
+2. 쇼핑몰 구축을 위한 테이블, 엔티티간의 연관관계 이해 목적
+3. 테스트 코드 작성을 통한 기본적인 기능 검증
