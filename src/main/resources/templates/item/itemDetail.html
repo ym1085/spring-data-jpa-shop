@@ -3,6 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}">
 
+<!-- CSRF(Cross-Site Request Forgery) 공격을 막기 위한 보안 설정 -->
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -13,7 +14,7 @@
     <script th:inline="javascript">
         $(function() {
             calculateTotalPrice(); // 상품 총 가격 계산
-            $("#count").change("on", function() {
+            $("#count").change("on", function() { // 사용자가 수량을 늘리거나, 줄일 때 총 가격 계산
                 calculateTotalPrice();
             })
         });
@@ -23,7 +24,7 @@
             const price = $("#price").val();
             const totalPrice = count * price;
             console.log(`totalPrice => ${totalPrice}`);
-            $("#totalPrice").val(totalPrice + "원");
+            $("#totalPrice").html(totalPrice + "원");
         }
     </script>
 </th:block>
@@ -43,7 +44,7 @@
         .regImgDiv{
             margin-right: 15px;
             height: auto;
-            widows: 50%;
+            width: 50%;
         }
         .regImg {
             width: 100%;
@@ -60,9 +61,11 @@
 <div layout:fragment="content" style="margin-left:25%;margin-right:25%">
     <input type="hidden" id="itemId" th:value="${item.id}">
     <div class="d-flex">
+        <!-- 대표 이미지 출력 영역 -->
         <div class="repImgDiv">
             <img th:src="${item.itemImgRequestDtoList[0].imgUrl}" class = "rounded repImg" th:alt="${item.itemName}">
         </div>
+        <!-- 대표 이미지 옆 설명란 영역 -->
         <div class="wd50">
             <span th:if="${item.itemSellStatus == T(com.shop.domain.item.constant.ItemSellStatus).SELL}" class="badge badge-primary mgb-15">
                 판매중
@@ -72,7 +75,6 @@
             </span>
             <div class="h4" th:text="${item.itemName}"></div>
             <hr class="my-4">
-
             <div class="text-right">
                 <div class="h4 text-danger text-left">
                     <input type="hidden" th:value="${item.price}" id="price" name="price">
@@ -86,7 +88,6 @@
                 </div>
             </div>
             <hr class="my-4">
-
             <div class="text-right mgt-50">
                 <h5>결제 금액</h5>
                 <h3 name="totalPrice" id="totalPrice" class="font-weight-bold"></h3>
@@ -101,6 +102,7 @@
         </div>
     </div>
 
+    <!-- 상품 상세 설명 영역 -->
     <div class="jumbotron jumbotron-fluid mgt-30">
         <div class="container">
             <h4 class="display-5">상품 상세 설명</h4>
@@ -109,6 +111,7 @@
         </div>
     </div>
 
+    <!-- 해당 상품의 이미지가 존재하면 모든 이미지를 상세 부분 하단에 출력 -->
     <div th:each="itemImg : ${item.itemImgRequestDtoList}" class="text-center">
         <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
     </div>

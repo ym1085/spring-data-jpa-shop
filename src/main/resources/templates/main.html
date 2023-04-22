@@ -32,28 +32,46 @@
     </style>
 </th:block>
 <div layout:fragment="content">
+    <!--
+        부트스트랩의 슬라이드를 보여주는 Carousel 컴포넌트를 이용하여 배너 생성
+        쇼핑몰의 경우 현재 행사하는 배너를 보여준다. img 태그의 경우 src에 웹 상에 존재하는
+        이미지 경로를 넣어주면 해당 이미지가 보여진다
+     -->
     <div id="carouselControls" class="carousel slide margin" data-ride="carousel">
         <div class="carousel-inner">
+            <!-- 1번 행사 이미지 -->
             <div class="carousel-item active item">
                 <img class="d-block w-100 banner" src="https://user-images.githubusercontent.com/13268420/112147492-1ab76200-8c20-11eb-8649-3d2f282c3c02.png" alt="First slide">
+            </div>
+            <!-- 2번 행사 이미지 -->
+            <div class="carousel-item item">
+                <img class="d-block w-100 banner" src="https://user-images.githubusercontent.com/13268420/112147492-1ab76200-8c20-11eb-8649-3d2f282c3c02.png" alt="Second slide">
+            </div>
+            <!-- 3번 행사 이미지 -->
+            <div class="carousel-item item">
+                <img class="d-block w-100 banner" src="https://user-images.githubusercontent.com/13268420/112147492-1ab76200-8c20-11eb-8649-3d2f282c3c02.png" alt="Third slide">
             </div>
         </div>
     </div>
 
-    <input type="hidden" name="searchQuery" th:value="${itemSearchRequestDto.searchQuery}">
+    <!-- th:value는 input, select, th:text는 div, span.. 등의 텍스트 요소 -->
+    <input type="text" name="searchQuery" th:value="${itemSearchRequestDto.searchQuery}">
+
+    <!-- itemSearchRequestDto.searchQuery 값이 null or 공백이 아닌경우 출력 -->
     <div th:if="${not #strings.isEmpty(itemSearchRequestDto.searchQuery)}" class="center">
         <p class="h3 font-weight-bold" th:text="${itemSearchRequestDto.searchQuery} + ' 검색 결과'"></p>
     </div>
 
     <!-- 컨텐츠 영역 -->
     <div class="row">
+        <!-- th:block의 경우 <div></div> 를 묶어서 반복시키기 위해서 사용 -->
         <th:block th:each="item, status: ${items.getContent()}">
             <div class="col-md-4 margin">
                 <div class="card">
                     <a th:href="'/item/' +${item.id}" class="text-dark">
                         <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemName}" height="400">
                         <div class="card-body">
-                            <h4 class="card-title">[[${item.itemName}]]</h4>
+                            <h4 class="card-title">[[${item.itemName}]]</h4> <!-- th:text 쓰나 [[${item.itemName}]] 쓰나 기능적으로는 동일함 -->
                             <p class="card-text">[[${item.itemDetail}]]</p>
                             <h3 class="card-title text-danger">[[${item.price}]]원</h3>
                         </div>
@@ -63,18 +81,40 @@
         </th:block>
     </div>
 
-    <!-- 페이징 처리 영역 -->
-    <div th:with="start=${(items.number / maxPage) * maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >
+    <!--
+            페이징 영역
+            01. th:with : 변수값을 정의할 때 사용
+            02. 페이지 시작 번호(start), 끝 페이지 번호(end)를 구해서 저장 한다
+
+            03. start
+                역할 : 현재 페이지의 첫 번째 아이템의 인덱스
+                수식 : (현재 페이지 번호 / 보여줄 페이지수[maxSize]) * 보여줄 페이지 수[maxSize] + 1
+                함수
+                    - items.Number : 현재 페이지( 0 : 1 페이지 )
+
+            04. end
+                수식 : start + (보여줄 페이지 수[maxSize] - 1)
+                역할 : 현재 페이지의 마지막 아이템의 인덱스를 나타냅니다.
+                함수
+                    - items.totalPages : 전체 페이지 갯수 반환
+
+            Page<MainItemResponseDto> items = itemService.getMainItemPage(itemSearchRequestDto, pageable);
+    -->
+    <div th:with="start=${(items.number / maxPage) * maxPage + 1}, end=(${(items.totalPages == 0)
+                    ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >
         <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${items.number eq 0}?'disabled':''">
+            <!-- 이전 -->
+            <li class="page-item" th:classappend="${items.number eq 0} ? 'disabled' : ''">
                 <a th:href="@{'/' + '?searchQuery=' + ${itemSearchRequestDto.searchQuery} + '&page=' + ${items.number-1}}" aria-label='Previous' class="page-link">
                     <span aria-hidden='true'>Previous</span>
                 </a>
             </li>
-            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page-1}?'active':''">
-                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchRequestDto.searchQuery} + '&page=' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
+            <!-- 페이지 번호 영역 -->
+            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page - 1}?'active':''">
+                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchRequestDto.searchQuery} + '&page=' + ${page - 1}}" th:inline="text" class="page-link">[[${page}]]</a>
             </li>
-            <li class="page-item" th:classappend="${items.number+1 ge items.totalPages}?'disabled':''">
+            <!-- 다음 -->
+            <li class="page-item" th:classappend="${items.number + 1 ge items.totalPages} ? 'disabled' : ''">
                 <a th:href="@{'/' +'?searchQuery=' + ${itemSearchRequestDto.searchQuery} + '&page=' + ${items.number+1}}" aria-label='Next' class="page-link">
                     <span aria-hidden='true'>Next</span>
                 </a>
