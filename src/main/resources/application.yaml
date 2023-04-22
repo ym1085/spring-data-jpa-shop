@@ -6,7 +6,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/shop?serverTimezone=UTC
     username: root
-    password: root
+    #password: root # mac
+    password: 1234 # window
   jpa:
     properties:
       hibernate:
@@ -28,13 +29,13 @@ spring:
       #location: /Users/YoungminKim # 업로드 된 파일의 임시 저장 경로(/Users/YoungminKim)
 
 # https://okky.kr/questions/641207 -> File upload on linux server
-# WINDOW
-#itemImgLocation: C:/shop/item # 상품 이미지 업로드 경로
-#uploadPath: file:///C:/shop/ # 외부 리소스 업로드 경로 -> https://toshi15shkim.github.io/articles/2019-09/spring-resources-location
+# window
+itemImgLocation: C:/shop/item # 상품 이미지 업로드 경로
+uploadPath: file:///C:/shop/ # 외부 리소스 업로드 경로 -> https://toshi15shkim.github.io/articles/2019-09/spring-resources-location
 
-# MAC
-itemImgLocation: /Users/youngminkim/shop/item # 상품 이미지 업로드 경로
-uploadPath: file:////Users/youngminkim/shop/ # 외부 리소스 업로드 경로 -> https://toshi15shkim.github.io/articles/2019-09/spring-resources-location
+# mac
+#itemImgLocation: /Users/youngminkim/shop/item # 상품 이미지 업로드 경로
+#uploadPath: file:////Users/youngminkim/shop/ # 외부 리소스 업로드 경로 -> https://toshi15shkim.github.io/articles/2019-09/spring-resources-location
 
 logging:
   level:
