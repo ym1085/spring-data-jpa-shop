@@ -149,4 +149,12 @@ public class ItemController {
         model.addAttribute("maxPage", 5); // 상품 관리 메뉴 하단에 보여줄 페이지 번호 최대 개수
         return "item/itemMng";
     }
+
+    @GetMapping(value = "/item/{itemId}")
+    public String itemDetail(@PathVariable("itemId") Long itemId, Model model) {
+        log.info("itemDetail, itemId = {}", itemId);
+        model.addAttribute("itemId", itemId);
+        model.addAttribute("item", itemService.getItemAndItemImgByItemId(itemId));
+        return "item/itemDetail";
+    }
 }
