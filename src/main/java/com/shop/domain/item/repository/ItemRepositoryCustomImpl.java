@@ -5,7 +5,11 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shop.domain.item.constant.ItemSellStatus;
 import com.shop.domain.item.entity.Item;
-import com.shop.web.controller.dto.ItemSearchRequestDto;
+import com.shop.domain.item.entity.QItem;
+import com.shop.domain.itemimg.entity.QItemImg;
+import com.shop.web.controller.dto.request.ItemSearchRequestDto;
+import com.shop.web.controller.dto.response.MainItemResponseDto;
+import com.shop.web.controller.dto.response.QMainItemResponseDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -74,6 +78,16 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         return null;
     }
 
+    /**
+     * 메인 페이지에서 검색창에 특정 상품을 조회하는 경우 사용
+     * 최초 '/' 접속 시에는 검색어가 없기 때문에 null로 초기화 하여 조건에서 제외
+     * @param searchQuery
+     * @return
+     */
+    private BooleanExpression searchByItemNameLike(String searchQuery) {
+        return StringUtils.isEmpty(searchQuery) ? null : item.itemName.like("%" + searchQuery + "%");
+    }
+
     @Override
     public Page<Item> getAdminItemPage(ItemSearchRequestDto itemSearchRequestDto, Pageable pageable) {
         QueryResults<Item> itemQueryResults = queryFactory
@@ -89,5 +103,40 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         List<Item> contents = itemQueryResults.getResults();
         long total = itemQueryResults.getTotal();
         return new PageImpl<>(contents, pageable, total); // contents, pageable, total
+    }
+
+    /**
+     * 메인 페이지 Item 내역 조회
+     * @param itemSearchRequestDto
+     * @param pageable
+     * @return
+     */
+    @Override
+    public Page<MainItemResponseDto> getMainItemPage(ItemSearchRequestDto itemSearchRequestDto, Pageable pageable) {
+        QItem item = QItem.item;
+        QItemImg itemImg = QItemImg.itemImg;
+        QueryResults<MainItemResponseDto> results = queryFactory
+                .select(
+                        new QMainItemResponseDto(
+                                item.id,
+                                item.itemName,
+                                item.itemDetail,
+                                itemImg.imgUrl,
+                                item.price
+                        )
+                )
+                .from(itemImg)
+                .join(itemImg.item, item)
+                .where(itemImg.repimgYn.eq("Y"))
+//                .where(item.itemName.like("%" + itemSearchRequestDto.getSearchQuery() + "%"))
+                .where(searchByItemNameLike(itemSearchRequestDto.getSearchQuery()))
+                .orderBy(item.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<MainItemResponseDto> content = results.getResults();
+        long total = results.getTotal();
+        return new PageImpl<>(content, pageable, total);
     }
 }

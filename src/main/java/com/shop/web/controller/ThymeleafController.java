@@ -1,6 +1,6 @@
 package com.shop.web.controller;
 
-import com.shop.web.controller.dto.ItemTestRequestDto;
+import com.shop.web.controller.dto.request.ItemTestRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

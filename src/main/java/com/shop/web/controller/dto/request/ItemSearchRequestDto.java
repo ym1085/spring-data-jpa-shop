@@ -1,4 +1,4 @@
-package com.shop.web.controller.dto;
+package com.shop.web.controller.dto.request;
 
 import com.shop.domain.item.constant.ItemSellStatus;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package com.shop.domain.item.entity;
 
 import com.shop.domain.BaseEntity;
 import com.shop.domain.item.constant.ItemSellStatus;
-import com.shop.web.controller.dto.ItemFormRequestDto;
+import com.shop.web.controller.dto.request.ItemFormRequestDto;
 import lombok.*;
 
 import javax.persistence.*;

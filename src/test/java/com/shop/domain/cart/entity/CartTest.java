@@ -3,7 +3,7 @@ package com.shop.domain.cart.entity;
 import com.shop.domain.cart.repository.CartRepository;
 import com.shop.domain.member.entity.Member;
 import com.shop.domain.member.repository.MemberRepository;
-import com.shop.web.controller.dto.MemberFormRequestDto;
+import com.shop.web.controller.dto.request.MemberFormRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

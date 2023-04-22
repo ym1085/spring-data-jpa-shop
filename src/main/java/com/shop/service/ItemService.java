@@ -4,9 +4,10 @@ import com.shop.domain.item.entity.Item;
 import com.shop.domain.item.repository.ItemRepository;
 import com.shop.domain.itemimg.entity.ItemImg;
 import com.shop.domain.itemimg.repository.ItemImgRepository;
-import com.shop.web.controller.dto.ItemFormRequestDto;
-import com.shop.web.controller.dto.ItemImgRequestDto;
-import com.shop.web.controller.dto.ItemSearchRequestDto;
+import com.shop.web.controller.dto.request.ItemFormRequestDto;
+import com.shop.web.controller.dto.request.ItemImgRequestDto;
+import com.shop.web.controller.dto.request.ItemSearchRequestDto;
+import com.shop.web.controller.dto.response.MainItemResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -104,8 +105,19 @@ public class ItemService {
         return item.getId();
     }
 
+    /**
+     * 관리자 페이지 상품 데이터 조회
+     */
     @Transactional(readOnly = true)
     public Page<Item> getAdminItemPage(ItemSearchRequestDto itemSearchRequestDto, Pageable pageable) {
         return itemRepository.getAdminItemPage(itemSearchRequestDto, pageable);
+    }
+
+    /**
+     * 메인 페이지 상품 데이터 조회 -> 대표 상품 데이터만 가져온다
+     */
+    @Transactional(readOnly = true)
+    public Page<MainItemResponseDto> getMainItemPage(ItemSearchRequestDto itemSearchRequestDto, Pageable pageable) {
+        return itemRepository.getMainItemPage(itemSearchRequestDto, pageable);
     }
 }
