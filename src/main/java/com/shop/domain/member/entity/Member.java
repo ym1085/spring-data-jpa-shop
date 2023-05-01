@@ -10,6 +10,7 @@ import javax.persistence.*;
 
 @ToString
 @Getter
+@Setter
 @Table(name = "member")
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor

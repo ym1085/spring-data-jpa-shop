@@ -26,6 +26,44 @@
             console.log(`totalPrice => ${totalPrice}`);
             $("#totalPrice").html(totalPrice + "원");
         }
+
+        function order() {
+            /* Spring Security에서 POST 요청시 csrf 토큰 값이 필요, 해당 값을 셋팅 */
+            let token = $("meta[name='_csrf']").attr("content");
+            let header = $("meta[name='_csrf_header']").attr("content");
+
+            const url = "/order";
+            let paramData = {
+                itemId : $("#itemId").val(),
+                count : $("#count").val()
+            }
+
+            let param = JSON.stringify(paramData); // obj to JSON Format
+            $.ajax({
+                url : url,
+                type : "POST",
+                contentType : "application/json", // server에 요청할 데이터 타입
+                data : param,
+                beforeSend : function(xhr) {
+                    /* 데이터 전송 전에 헤더에 csrf 값 설정 */
+                    xhr.setRequestHeader(header, token);
+                },
+                dataType : "json", // server에서 받을 데이터 타입
+                cache : "false",
+                success : function(result, status) {
+                    alert("주문이 완료 되었습니다.");
+                    location.href = "/";
+                },
+                error : function(jqXHR, status, error) {
+                    if (jqXHR.status == '401') {
+                        alert("로그인 후 이용해주세요.");
+                        location.href = "/member/login";
+                    } else {
+                        alert(jqXHR.responseText);
+                    }
+                }
+            });
+        }
     </script>
 </th:block>
 
