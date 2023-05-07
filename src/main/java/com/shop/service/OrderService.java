@@ -2,14 +2,21 @@ package com.shop.service;
 
 import com.shop.domain.item.entity.Item;
 import com.shop.domain.item.repository.ItemRepository;
+import com.shop.domain.itemimg.entity.ItemImg;
+import com.shop.domain.itemimg.repository.ItemImgRepository;
 import com.shop.domain.member.entity.Member;
 import com.shop.domain.member.repository.MemberRepository;
 import com.shop.domain.order.entity.Order;
 import com.shop.domain.order.repository.OrderRepository;
 import com.shop.domain.orderitem.entity.OrderItem;
 import com.shop.web.controller.dto.request.OrderRequestDto;
+import com.shop.web.controller.dto.response.OrderItemHistResponseDto;
+import com.shop.web.controller.dto.response.OrderItemResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +31,16 @@ import java.util.List;
 public class OrderService {
 
     private final ItemRepository itemRepository;
+    private final ItemImgRepository itemImgRepository;
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
 
+    /**
+     * 상품 주문
+     * @param orderRequestDto itemId: 상품 ID, count: 주문 수량 전달
+     * @param email 상품 주문을 수행하는 회원의 이메일
+     * @return 주문 완료된 orderId 반환
+     */
     public Long order(OrderRequestDto orderRequestDto, String email) {
         /* item id를 기반으로 해당 id에 해당하는 상품을 조회 한다 */
         Item item = itemRepository.findById(orderRequestDto.getItemId()).orElseThrow(EntityNotFoundException::new);
@@ -45,5 +59,31 @@ public class OrderService {
         orderRepository.save(order);
 
         return order.getId();
+    }
+
+    /**
+     * 회원 ID에 해당하는 주문 이력 조회
+     * @param email 회원 ID
+     * @param pageable 전체 주문 이력 중 보여줄 페이지 개수
+     * @return 주문 이력 정보
+     */
+    @Transactional(readOnly = true)
+    public Page<OrderItemHistResponseDto> getOrderList(String email, Pageable pageable) {
+        log.debug("email = {}, pageable = {}", email, pageable);
+        List<Order> orders = orderRepository.findOrders(email, pageable); // 유저의 ID와 페이징 조건을 이용해 주문 목록 조회,  // order의 size만큼 query가 실행되는 성능 이슈 발생
+        Long totalCount = orderRepository.countOrder(email); // 유저의 주문 총 개수를 구한다
+
+        List<OrderItemHistResponseDto> orderHitsDtoList = new ArrayList<>();
+        for (Order order : orders) { // 전체 주문 목록에서 단건 주문 결과를 뽑는다
+            OrderItemHistResponseDto orderHitsDto = new OrderItemHistResponseDto(order); // orderId, orderDate, orderStatus 셋팅
+            List<OrderItem> orderItems = order.getOrderItems(); // order의 size만큼 query가 실행되는 성능 이슈 발생
+            for (OrderItem orderItem : orderItems) {
+                ItemImg itemImg = itemImgRepository.findByItemIdAndRepimgYn(orderItem.getItem().getId(), "Y"); // 주문한 상품의 대표 이미지 조회
+                OrderItemResponseDto orderItemRequestDto = new OrderItemResponseDto(orderItem, itemImg.getImgUrl());
+                orderHitsDto.addOrderItemDto(orderItemRequestDto);
+            }
+            orderHitsDtoList.add(orderHitsDto);
+        }
+        return new PageImpl<>(orderHitsDtoList, pageable, totalCount); // 페이지 구현 객체 생성 후 반환
     }
 }
