@@ -13,6 +13,7 @@ spring:
       hibernate:
         show_sql: true    # 실행되는 쿼리 콘솔 출력
         format_sql: true  # 콘솔창 쿼리 가독성 좋게 포맷팅
+        default_batch_fetch_size: 1000 # JPA 사용 시 N + 1 문제가 많이 발생 -> https://granger.tistory.com/67
     hibernate:
       ddl-auto: validate # none, crate, create-drop, update, validate
     database-platform: org.hibernate.dialect.MySQL8Dialect
