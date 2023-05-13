@@ -14,6 +14,7 @@ import com.shop.web.controller.dto.response.OrderItemHistResponseDto;
 import com.shop.web.controller.dto.response.OrderItemResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -85,5 +86,33 @@ public class OrderService {
             orderHitsDtoList.add(orderHitsDto);
         }
         return new PageImpl<>(orderHitsDtoList, pageable, totalCount); // 페이지 구현 객체 생성 후 반환
+    }
+
+    /**
+     * 현재 로그인한 유저와, 주문을 한 유저의 Email을 비교하여 주문 취소 진행 여부를 반환
+     * @param orderId 주문 번호
+     * @param email 로그인한 유저의 이메일
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public boolean validateOrder(Long orderId, String email) {
+        Member currentMember = memberRepository.findByEmail(email);
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException());
+
+        Member orderedMember = order.getMember();
+        if (!StringUtils.equals(currentMember.getEmail(), orderedMember.getEmail())) {
+            // 현재 로그인 한 유저와 주문한 유저가 동일 하지 않다면 return
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 주문 번호를 기반으로 주문 취소를 수행
+     * @param orderId 주문 번호
+     */
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException()); // orderId에 해당하는 주문 정보
+        order.cancelOrder();
     }
 }

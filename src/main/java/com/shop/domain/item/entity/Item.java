@@ -28,15 +28,15 @@ public class Item extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String itemName; // 상품명
 
+    @Lob
+    @Column(nullable = false)
+    private String itemDetail; // 상품 상세 설명
+
     @Column(name = "price", nullable = false)
     private int price; // 상품 가격
 
     @Column(nullable = false)
     private int stockNumber; // 상품 재고
-
-    @Lob
-    @Column(nullable = false)
-    private String itemDetail; // 상품 상세 설명
 
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; // 상품 판매 상태
@@ -73,5 +73,10 @@ public class Item extends BaseEntity {
             throw new OutOfStockException("상품의 재고가 부족 합니다. (현재 재고 수량: " + this.stockNumber + ")");
         }
         this.stockNumber = restStockNum; // 현재 stockNumber - 주문 시 받은 재고 => 엔티티에 업데이트
+    }
+
+    /* 유저가 상품 주문 취소를 하면 상품의 기존 재고에서 +1을 해주어야 한다 */
+    public void addStockNumber(int stockNumber) {
+        this.stockNumber += stockNumber;
     }
 }

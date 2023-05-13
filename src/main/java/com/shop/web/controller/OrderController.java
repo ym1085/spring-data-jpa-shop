@@ -72,4 +72,18 @@ public class OrderController {
         model.addAttribute("maxPage", 5);
         return "order/orderHist";
     }
+
+    @PostMapping(value = "/order/{orderId}/cancel")
+    public @ResponseBody ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId,
+                                                    Principal principal) {
+        log.debug("orderId = {}", orderId);
+
+        if (!orderService.validateOrder(orderId, principal.getName())) {
+            log.error("주문 권한이 존재하지 않습니다");
+            return new ResponseEntity<String>("주문 취소 권한이 존재하지 않습니다.", HttpStatus.FORBIDDEN);
+        }
+
+        orderService.cancelOrder(orderId); // 주문 취소
+        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
+    }
 }
